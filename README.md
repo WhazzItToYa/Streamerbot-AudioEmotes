@@ -7,7 +7,7 @@ For example, clapping emotes can trigger the sound of applause, or laughing emot
 
 ## Installation
 
-* Click on [AudioEmotes.sb](https://raw.githubusercontent.com/WhazzItToYa/Streamerbot-AudioEmotes/refs/heads/main/AudioEmotes.sb) and [import it into Streamer.bot](https://docs.streamer.bot/guide/import-export#import) as usual.
+* Download [AudioEmotes.sb](https://raw.githubusercontent.com/WhazzItToYa/Streamerbot-AudioEmotes/refs/heads/main/AudioEmotes.sb) and [import it into Streamer.bot](https://docs.streamer.bot/guide/import-export#import) by dragging the downloaded file into the Streamer.bot Import window as usual.
 
 The import includes a sample action that plays applause sounds for any emotes whose names contain "clap" or "applause".
 
@@ -29,4 +29,5 @@ For each distinct category of emotes you want to play a type of sound for:
     * 0 : does not add any additional sounds per emote.
     * 1 : Doubles the number of clips played per emote.
     * 2 : Quadruples the number of clips played per emote
+
 

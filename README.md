@@ -21,7 +21,7 @@ For each distinct category of emotes you want to play a type of sound for:
 * Edit the Value of the "**Set Argument %pattern%**" subaction to list all of keywords that should appear in the name of the emotes you want to play sounds for.  For example:
   * `clap,applause` would match any emotes containing the words "clap" or "applause", such as Clap, PeepoClap, or the Applause twemoji.
   * `lol,kekw,laugh,lul,giggle,lmao,rofl,kappa,hehe` matches all manner of laugh-related emotes.
-* The default settings will ramp up the number & length of the sounds for each matching emote included in a chat message. You can adjust them by setting the following arguments:
+* The default settings will ramp up the number & length of the sounds for each matching emote included in a chat message. You can adjust them by setting the following optional arguments:
   * `minRepetitions` : The number of sound clips that will be played for a single emote (default 1).
   * `maxRepetitions` : The most sound clips that will be played. Use this to keep your sounds from going crazy if someone was to spam emotes (default 32), or you set way too high a value for `exponentialMultiplier`.
   * `repsPerEmote` : The number of additional sound clips played for each additional matching emote in a message (i.e., linear growth)
@@ -29,5 +29,6 @@ For each distinct category of emotes you want to play a type of sound for:
     * 0 : does not add any additional sounds per emote.
     * 1 : Doubles the number of clips played per emote.
     * 2 : Quadruples the number of clips played per emote
+
 
 

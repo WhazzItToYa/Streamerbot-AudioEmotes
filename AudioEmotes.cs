@@ -1,5 +1,6 @@
 using System;
 using Twitch.Common.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,33 +10,54 @@ public class CPHInline
     {
         if (!CPH.TryGetArg("pattern", out string patternString)) return false;
         string[] patternList = patternString.Split(',');
-        if (!CPH.TryGetArg("emotes", out List<Emote> emotes)) emotes = new List<Emote>();
+        IEnumerable<string> emotes;
+        if (CPH.TryGetArg("emotes", out List<Emote> emoteList)) {
+            // Twitch message triggers have C# List ready to use.
+            emotes = emoteList.Select(emote => emote.Name.ToLower());
+        } else {
+            // Otherwise, look for the emote data in "emote.#" arguments.
+            emotes = new EmoteArgEnumerator(this);
+        }
 
-        // string emoteList = string.Join(",", emotes.Select(x => x.Type + ":" + EmojiDescription(x)));
-        // CPH.LogDebug($"EMOTES: {emoteList}");
+        // string emoteListStr = string.Join(",", emotes.Select(x => EmojiDescription(x)));
+        // CPH.LogDebug($"EMOTES: {emoteListStr}");
         int count = 0;
         foreach (string pattern in patternList) {
             string lpattern = pattern.ToLower();
             count += (from emote in emotes
-                      where EmojiDescription(emote).ToLower().Contains(lpattern)
+                      where EmojiDescription(emote).Contains(lpattern)
                       select emote).Count();
         }
         CPH.SetArgument("matchingEmoteCount", count);
         return true;
     }
 
+    // An enumerator for a set of index-named arguments.
+    private class EmoteArgEnumerator(CPHInline i) : IEnumerable<string>
+    {
+        CPHInline inline = i;
+
+        public IEnumerator<string> GetEnumerator() {
+            for (int i = 0; true; i++) {
+                if (inline.CPH.TryGetArg($"emotes.{i}.text", out string name)) {
+                    yield return name.ToLower();
+                } else {
+                    break;
+                }
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+    
     Dictionary<int, string> TwemojiDescriptions;
 
-    private string EmojiDescription(Emote emote)
+    private string EmojiDescription(string emoteName)
     {
         // CPH.LogDebug($"EMOTE DESC of {emote.Name}");
-        if (emote.Type.Equals("Twemoji")) {
-            if (TwemojiDescriptions.TryGetValue(GetUnicode(emote.Name), out string desc)) {
-                return desc;
-            }
-            return "";
+        if (TwemojiDescriptions.TryGetValue(GetUnicode(emoteName), out string desc)) {
+            return desc;
         } else {
-            return emote.Name;
+            return emoteName;
         }
     }
 
